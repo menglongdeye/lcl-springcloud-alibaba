@@ -3,9 +3,9 @@ server:
   port: 8080
 spring:
   application:
-    name: msc-consumer-depart
-#  cloud:
-#    nacos:
-#      discovery:
-#        server-addr: 127.0.0.1:8848
+    name: consumer01-depart
+  cloud:
+    nacos:
+      discovery:
+        server-addr: 172.20.10.2:8848
 
