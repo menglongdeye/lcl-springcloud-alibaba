@@ -2,9 +2,9 @@ spring:
   cloud:
     nacos:
       config:
-        server-addr: 172.20.10.2:8848
+        server-addr: 172.20.10.2:8840,172.20.10.2:8845,172.20.10.2:8849
         file-extension: yml
   application:
-    name: provider02-depart
+    name: provider02Nacosconfig
   profiles:
     active: test

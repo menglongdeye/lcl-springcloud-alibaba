@@ -8,6 +8,7 @@ import org.springframework.cloud.context.config.annotation.RefreshScope;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 @Service
 @RefreshScope
@@ -48,6 +49,11 @@ public class DepartServiceImpl implements DepartService {
 
     @Override
     public Depart getDepartById(int id) {
+        try {
+            TimeUnit.SECONDS.sleep(6);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
         if(repository.existsById(id)) {
             return repository.getOne(id);
         }
