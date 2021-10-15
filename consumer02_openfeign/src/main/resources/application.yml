@@ -1,6 +1,6 @@
 server:
   # ?????8080
-  port: 8080
+  port: 9000
 spring:
   application:
     name: consumer01-depart

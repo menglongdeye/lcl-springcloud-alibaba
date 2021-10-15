@@ -10,6 +10,6 @@ spring:
   profiles:
     active: test
 server:
-  port: 8080
+  port: 8070
 depart:
-  name: demo-02
+  name: demo-01
