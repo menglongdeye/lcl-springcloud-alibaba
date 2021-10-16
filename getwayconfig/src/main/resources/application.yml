@@ -1,6 +1,5 @@
 server:
-  # ?????8080
-  port: 8080
+  port: 9001
 spring:
   cloud:
     gateway:
@@ -8,24 +7,32 @@ spring:
         - id: baidu_route
           uri: https://www.baidu.com
           predicates:
-            - Path=/**
-#    loadbalancer:
-#      # 关闭Ribbon的负载均衡器
-#      ribbon:
-#        enabled: false
+            - Path=/a
+        - id: ribbon_route
+          uri: lb://provider02Nacosconfig
+          predicates:
+            - Path=/provider/depart/**
+            #- After=2022-10-01T17:42:47.789-07:00[Asia/Shanghai]
+            #- Before=2022-10-01T17:42:47.789-07:00[Asia/Shanghai]
+            #- Between=2021-10-01T17:42:47.789-07:00[Asia/Shanghai], 2022-11-01T17:42:47.789-07:00[Asia/Shanghai]
+            #- Cookie=lcl,mm
+            #- Header=demokey,demovalue
+            #- Host=mypc:9001
+            #- Query=name
+            #- Query=age, 18
+            #- RemoteAddr=172.20.10.1/30
+            - Method=POST, GET
+        - id: header_filter
+          uri: http://localhost
+          predicates:
+            - Path=/demo
+          #filters:
+            #-AddRequestHeader=demokey, demovalue
+      discovery:
+        locator:
+          enabled: true
     nacos:
       discovery:
         server-addr: 172.20.10.2:8840,172.20.10.2:8845,172.20.10.2:8849
-#feign:
-#  client:
-#    config:
-#      default:
-#        #连接超时时间
-#        connectTimeout: 5000
-#        #数据读取超时是时间
-#        readTimeout: 5000
-
-# 指定要使用的负载均衡策略 # <clientName>. <clientConfigNameSpace>.NFLoadBalancerRuleClassName
-#provider02Nacosconfig:
-#  ribbon:
-#    NFLoadBalancerRuleClassName: com.netflix.loadbalancer.RandomRule
+  application:
+    name: getewayconfig
