@@ -1,5 +1,8 @@
 package com.lcl.cloud.alibaba.gateway;
 
+import com.lcl.cloud.alibaba.gateway.filter.OneGatewayFilter;
+import com.lcl.cloud.alibaba.gateway.filter.ThreeGatewayFilter;
+import com.lcl.cloud.alibaba.gateway.filter.TwoGatewayFilter;
 import com.netflix.loadbalancer.IRule;
 import com.netflix.loadbalancer.RandomRule;
 import org.springframework.boot.SpringApplication;
@@ -29,7 +32,6 @@ public class GetwayConfigApplication {
 //    public RouteLocator someRouteLocator(RouteLocatorBuilder locatorBuilder){
 //        ZonedDateTime time = LocalDateTime.now().minusDays(5).atZone(ZoneId.systemDefault());
 //        ZonedDateTime time2 = LocalDateTime.now().plusDays(5).atZone(ZoneId.systemDefault());
-//        System.out.println("==========="+ time);
 //        return locatorBuilder.routes()
 //                .route(predicateSpec -> predicateSpec.path("/b").uri("https://www.cnblogs.com").id("bkyn_route"))
 //                //.route(predicateSpec -> predicateSpec.path("/provider/depart/**").and().after(time).uri("lb://provider02Nacosconfig").id("ribbon_route"))
@@ -40,9 +42,35 @@ public class GetwayConfigApplication {
 //                //.route(predicateSpec -> predicateSpec.path("/provider/depart/**").and().between(time,time2).and().cookie("lcl","mm").and().header("demokey","demovalue").and().host("mypc:9001").uri("lb://provider02Nacosconfig").id("ribbon_route"))
 //                //.route(predicateSpec -> predicateSpec.path("/provider/depart/**").and().query("name").and().query("age","18").uri("lb://provider02Nacosconfig").id("ribbon_route"))
 //                //.route(predicateSpec -> predicateSpec.path("/provider/depart/**").and().remoteAddr("172.20.10.1/30").uri("lb://provider02Nacosconfig").id("ribbon_route"))
-//                .route(predicateSpec -> predicateSpec.path("/provider/depart/**").and().method("GET","POST").uri("lb://provider02Nacosconfig").id("ribbon_route"))
+//                //.route(predicateSpec -> predicateSpec.path("/provider/depart/**").and().method("GET","POST").uri("lb://provider02Nacosconfig").id("ribbon_route"))
+//                .route(predicateSpec -> predicateSpec.path("/demo").filters(fs -> fs.addRequestHeader("demokey","demovalue")).uri("http://localhost").id("header_filter"))
+//
 //                .build();
 //    }
+
+
+//    @Bean
+//    public RouteLocator someRouteLocator(RouteLocatorBuilder locatorBuilder){
+//        return locatorBuilder.routes()
+//                //.route(predicateSpec -> predicateSpec.path("/demo").filters(fs -> fs.addRequestHeader("demokey","demovalue")).uri("http://localhost").id("header_filter"))
+//                //.route(predicateSpec -> predicateSpec.path("/demo").filters(fs -> fs.addRequestParameter("name","lcl")).uri("http://localhost").id("header_filter"))
+//                //.route(predicateSpec -> predicateSpec.path("/demo").filters(fs -> fs.addResponseHeader("demokey","demovalue2")).uri("http://localhost").id("header_filter"))
+//                //.route(predicateSpec -> predicateSpec.path("/demo").filters(fs -> fs.prefixPath("demo")).uri("http://localhost").id("header_filter"))
+//                //.route(predicateSpec -> predicateSpec.path("/demo").filters(fs -> fs.stripPrefix(2)).uri("http://localhost").id("header_filter"))
+//                .route(predicateSpec -> predicateSpec.path("/demo").filters(fs -> fs.rewritePath("/red(?<segment>/?.*)", "${segment}")).uri("http://localhost").id("header_filter"))
+//                .build();
+//    }
+
+    @Bean
+    public RouteLocator someRouteLocator(RouteLocatorBuilder locatorBuilder){
+        return locatorBuilder.routes()
+                .route(predicateSpec -> predicateSpec.path("/**")
+                        .filters(fs -> fs.filter(new OneGatewayFilter())
+                                        .filter(new TwoGatewayFilter())
+                                        .filter(new ThreeGatewayFilter()))
+                        .uri("http://localhost:9000").id("selfFilter"))
+                .build();
+    }
 
 
     @Bean

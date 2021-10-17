@@ -3,15 +3,20 @@ server:
 spring:
   cloud:
     gateway:
-      routes:
-        - id: baidu_route
-          uri: https://www.baidu.com
-          predicates:
-            - Path=/a
-        - id: ribbon_route
-          uri: lb://provider02Nacosconfig
-          predicates:
-            - Path=/provider/depart/**
+#      default-filters:
+#        - name: CircuitBreaker
+#          args:
+#            name: myCircuitBreaker
+#            fallbackUri: forward:/fallback
+#      routes:
+#        - id: baidu_route
+#          uri: https://www.baidu.com
+#          predicates:
+#            - Path=/a
+#        - id: ribbon_route
+#          uri: lb://provider02Nacosconfig
+#          predicates:
+#            - Path=/provider/depart/**
             #- After=2022-10-01T17:42:47.789-07:00[Asia/Shanghai]
             #- Before=2022-10-01T17:42:47.789-07:00[Asia/Shanghai]
             #- Between=2021-10-01T17:42:47.789-07:00[Asia/Shanghai], 2022-11-01T17:42:47.789-07:00[Asia/Shanghai]
@@ -21,16 +26,22 @@ spring:
             #- Query=name
             #- Query=age, 18
             #- RemoteAddr=172.20.10.1/30
-            - Method=POST, GET
-        - id: header_filter
-          uri: http://localhost
-          predicates:
-            - Path=/demo
-          #filters:
-            #-AddRequestHeader=demokey, demovalue
+            #- Method=POST, GET
+#        - id: header_filter
+#          uri: http://localhost:9000/demo/header
+#          predicates:
+#            - Path=/
+#          filters:
+#            - AddRequestHeader=demokey, demovalue
+#            - AddRequestParamter=name, lcl
+#            - AddResponseHeader=demokey, demovalue2
+#            - PfixPath=/demo
+#            - StripPrefix=2
+#            - RewritePath=/red(?<segment>/?.*), ${segment}
       discovery:
         locator:
           enabled: true
+
     nacos:
       discovery:
         server-addr: 172.20.10.2:8840,172.20.10.2:8845,172.20.10.2:8849
