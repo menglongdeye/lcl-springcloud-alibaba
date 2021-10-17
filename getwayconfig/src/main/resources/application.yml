@@ -1,8 +1,8 @@
 server:
   port: 9001
-spring:
-  cloud:
-    gateway:
+#spring:
+#  cloud:
+#    gateway:
 #      default-filters:
 #        - name: CircuitBreaker
 #          args:
@@ -38,6 +38,19 @@ spring:
 #            - PfixPath=/demo
 #            - StripPrefix=2
 #            - RewritePath=/red(?<segment>/?.*), ${segment}
+spring:
+  cloud:
+    gateway:
+#      routes:
+#        - id: circuitBreaker_filter
+#          uri: http://localhost:9000
+#          predicates:
+#            - Path=/**
+#          filters:
+#            - name: CircuitBreaker
+#              args:
+#                name: myCircuitBreaker
+#                fallbackUri: forward:/fb
       discovery:
         locator:
           enabled: true

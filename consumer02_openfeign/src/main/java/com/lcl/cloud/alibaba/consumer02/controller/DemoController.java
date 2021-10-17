@@ -24,6 +24,7 @@ public class DemoController {
 
     @RequestMapping("/time")
     public String timeHandler(){
+        int i = 1/0;
         return "time: " + System.currentTimeMillis();
     }
 }

@@ -61,17 +61,29 @@ public class GetwayConfigApplication {
 //                .build();
 //    }
 
+//    @Bean
+//    public RouteLocator someRouteLocator(RouteLocatorBuilder locatorBuilder){
+//        return locatorBuilder.routes()
+//                .route(predicateSpec -> predicateSpec.path("/**")
+//                        .filters(fs -> fs.filter(new OneGatewayFilter())
+//                                        .filter(new TwoGatewayFilter())
+//                                        .filter(new ThreeGatewayFilter()))
+//                        .uri("http://localhost:9000").id("selfFilter"))
+//                .build();
+//    }
+
+
     @Bean
     public RouteLocator someRouteLocator(RouteLocatorBuilder locatorBuilder){
         return locatorBuilder.routes()
                 .route(predicateSpec -> predicateSpec.path("/**")
-                        .filters(fs -> fs.filter(new OneGatewayFilter())
-                                        .filter(new TwoGatewayFilter())
-                                        .filter(new ThreeGatewayFilter()))
+                        .filters(fs -> fs.circuitBreaker(config -> {
+                            config.setName("myCircuitBreaker");
+                        config.setFallbackUri("forward:/fb");}
+                        ))
                         .uri("http://localhost:9000").id("selfFilter"))
                 .build();
     }
-
 
     @Bean
     public IRule loadBalancerRule(){
