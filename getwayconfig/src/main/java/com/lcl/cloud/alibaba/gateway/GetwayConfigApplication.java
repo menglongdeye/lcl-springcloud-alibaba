@@ -7,9 +7,11 @@ import com.netflix.loadbalancer.IRule;
 import com.netflix.loadbalancer.RandomRule;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.cloud.gateway.filter.ratelimit.KeyResolver;
 import org.springframework.cloud.gateway.route.RouteLocator;
 import org.springframework.cloud.gateway.route.builder.RouteLocatorBuilder;
 import org.springframework.context.annotation.Bean;
+import reactor.core.publisher.Mono;
 
 import java.time.LocalDateTime;
 import java.time.ZoneId;
@@ -73,17 +75,24 @@ public class GetwayConfigApplication {
 //    }
 
 
-    @Bean
-    public RouteLocator someRouteLocator(RouteLocatorBuilder locatorBuilder){
-        return locatorBuilder.routes()
-                .route(predicateSpec -> predicateSpec.path("/**")
-                        .filters(fs -> fs.circuitBreaker(config -> {
-                            config.setName("myCircuitBreaker");
-                        config.setFallbackUri("forward:/fb");}
-                        ))
-                        .uri("http://localhost:9000").id("selfFilter"))
-                .build();
-    }
+//    /**
+//     * 配置方式的熔断与降级
+//     * @param locatorBuilder
+//     * @return
+//     */
+//    @Bean
+//    public RouteLocator someRouteLocator(RouteLocatorBuilder locatorBuilder){
+//        return locatorBuilder.routes()
+//                .route(predicateSpec -> predicateSpec.path("/demo/time")
+//                        .filters(fs -> fs.circuitBreaker(config -> {
+//                            config.setName("myCircuitBreaker");
+//                        config.setFallbackUri("forward:/fb");}
+//                        ))
+//                        .uri("http://localhost:9000").id("selfFilter"))
+//                .build();
+//    }
+
+
 
     @Bean
     public IRule loadBalancerRule(){

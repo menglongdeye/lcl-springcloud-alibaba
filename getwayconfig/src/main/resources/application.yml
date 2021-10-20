@@ -39,18 +39,45 @@ server:
 #            - StripPrefix=2
 #            - RewritePath=/red(?<segment>/?.*), ${segment}
 spring:
+  redis:
+    password:
+     timeout: 1000
+     database: 0
+     lettuce:
+       pool:
+         max,active: 8
+         max,wait: -1
+         max,idle: 8
+         min,idle: 0
+    port: 6379
+    host: 172.20.10.14
+  cache:
+    redis:
+      use,key,prefix: true
+      key,prefix: dev
+      cache,null,values: false
+      time,to,live: 20s
   cloud:
     gateway:
-#      routes:
-#        - id: circuitBreaker_filter
-#          uri: http://localhost:9000
-#          predicates:
-#            - Path=/**
-#          filters:
-#            - name: CircuitBreaker
-#              args:
-#                name: myCircuitBreaker
-#                fallbackUri: forward:/fb
+      routes:
+        - id: circuitBreaker_filter
+          uri: http://localhost:9000/demo/time
+          predicates:
+            - Path=/demo/time
+          filters:
+            - name: CircuitBreaker
+              args:
+                name: myCircuitBreaker
+                fallbackUri: forward:/fb
+            # 限流过滤器，使用gateway内置令牌算法
+            - name: RequestRateLimiter
+              args:
+                # 令牌桶每秒填充平均速率,即行等价于允许用户每秒处理多少个请求平均数
+                redis-rate-limiter.replenishRate: 10
+                # 令牌桶的容量，允许在一秒钟内完成的最大请求数
+                redis-rate-limiter.burstCapacity: 20
+                # 用于限流的键的解析器的 Bean 对象的名字。它使用 SpEL 表达式根据#{@beanName}从 Spring 容器中获取 Bean 对象。
+                key-resolver: "#{@apiKeyResolver}"
       discovery:
         locator:
           enabled: true
