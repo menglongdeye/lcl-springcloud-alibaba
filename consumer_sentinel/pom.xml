@@ -66,6 +66,19 @@
             <version>1.8.0</version>
         </dependency>
 
+        <!--sentinel的nacos 数据源依赖-->
+        <dependency>
+            <groupId>com.alibaba.csp</groupId>
+            <artifactId>sentinel-datasource-nacos</artifactId>
+            <version>1.8.0</version>
+        </dependency>
+        <!--nacos-config依赖-->
+        <dependency>
+            <groupId>com.alibaba.cloud</groupId>
+            <artifactId>spring-cloud-starter-alibaba-nacos-config</artifactId>
+            <version>2.2.3.RELEASE</version>
+        </dependency>
+
 <!--        &lt;!&ndash;spring cloud loadbalancer 依赖&ndash;&gt;-->
 <!--        <dependency>-->
 <!--            <groupId>org.springframework.cloud</groupId>-->

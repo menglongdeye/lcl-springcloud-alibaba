@@ -13,6 +13,16 @@ spring:
         port: 8719
         eager: true
         client-ip: 172.20.10.10
+      datasource:
+        my-datasource:
+          nacos:
+            server-addr: 172.20.10.2:8840,172.20.10.2:8845,172.20.10.2:8849
+            # 配置文件名称
+            data-id: my-ds-fw
+            # 规则类型
+            rule-type: flow
+            # 配置文件类型
+            data-type: json
     #    loadbalancer:
 #      # 关闭Ribbon的负载均衡器
 #      ribbon:
@@ -20,6 +30,9 @@ spring:
     nacos:
       discovery:
         server-addr: 172.20.10.2:8840,172.20.10.2:8845,172.20.10.2:8849
+      config:
+        server-addr: 172.20.10.2:8840,172.20.10.2:8845,172.20.10.2:8849
+        file-extension: yml
 feign:
   client:
     config:

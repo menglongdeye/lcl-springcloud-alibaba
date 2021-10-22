@@ -34,7 +34,7 @@ public class ConsumerSentinelApplication {
         //初始化黑白名单
         //initAuthorityRule();
         //热点参数
-        initParamFlowRule();
+        //initParamFlowRule();
     }
 
     //初始化规则
