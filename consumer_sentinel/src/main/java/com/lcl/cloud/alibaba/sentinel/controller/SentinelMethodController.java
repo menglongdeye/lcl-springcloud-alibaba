@@ -16,7 +16,7 @@ import java.util.List;
  * 消费者Controller 基于Feign实现的接口调用
  */
 @RestController
-@RequestMapping("/sentinel/consumer/method/depart")
+@RequestMapping("/sentinel")
 public class SentinelMethodController {
 
     @Autowired
@@ -29,7 +29,8 @@ public class SentinelMethodController {
     @SentinelResource(value = "getDepartById", fallback = "getDepartByIdBack")
     public Depart getHandle(@PathVariable("id") int id) {
         //int i = 1/0;
-        return departService.getDepartById(id);
+        //return departService.getDepartById(id);
+        return Depart.builder().id(123).name("consumer_sentinel").build();
     }
 
 

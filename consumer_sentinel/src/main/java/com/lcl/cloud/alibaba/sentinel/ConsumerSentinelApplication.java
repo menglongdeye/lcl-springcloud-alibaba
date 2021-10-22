@@ -23,7 +23,7 @@ public class ConsumerSentinelApplication {
 
     public static void main(String[] args) {
         SpringApplication.run(ConsumerSentinelApplication.class, args);
-        initRule();
+        //initRule();
     }
 
     public static void initRule() {
