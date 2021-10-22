@@ -3,14 +3,17 @@ server:
   port: 9000
 spring:
   application:
-    name: consumer01-depart
+    name: consumer-sentinel-depart
   cloud:
     sentinel:
+      filter:
+        url-patterns: /**
       transport:
         dashboard: 172.20.10.2:8888
         port: 8719
         eager: true
-#    loadbalancer:
+        client-ip: 172.20.10.10
+    #    loadbalancer:
 #      # 关闭Ribbon的负载均衡器
 #      ribbon:
 #        enabled: false
@@ -25,8 +28,16 @@ feign:
         connectTimeout: 5000
         #数据读取超时是时间
         readTimeout: 5000
+  sentinel:
+    enabled: true
 
 # 指定要使用的负载均衡策略 # <clientName>. <clientConfigNameSpace>.NFLoadBalancerRuleClassName
 provider02Nacosconfig:
   ribbon:
     NFLoadBalancerRuleClassName: com.netflix.loadbalancer.RandomRule
+
+management:
+  endpoint:
+    web:
+      exposure:
+        include: '*'

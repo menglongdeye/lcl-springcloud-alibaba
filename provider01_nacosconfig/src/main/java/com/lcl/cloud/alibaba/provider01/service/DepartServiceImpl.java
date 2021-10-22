@@ -49,6 +49,7 @@ public class DepartServiceImpl implements DepartService {
 
     @Override
     public Depart getDepartById(int id) {
+        System.out.println("==================="+id);
 //        try {
 //            TimeUnit.SECONDS.sleep(6);
 //        } catch (InterruptedException e) {
