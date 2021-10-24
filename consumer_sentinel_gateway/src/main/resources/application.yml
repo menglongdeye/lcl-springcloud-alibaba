@@ -23,7 +23,7 @@ spring:
         url-patterns: /**
       transport:
         dashboard: 172.20.10.2:8888
-        port: 8719
+        port: 8722
         eager: true
         client-ip: 172.20.10.10
     #    loadbalancer:

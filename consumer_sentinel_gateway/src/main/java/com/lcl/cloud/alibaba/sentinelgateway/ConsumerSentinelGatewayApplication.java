@@ -1,6 +1,10 @@
 package com.lcl.cloud.alibaba.sentinelgateway;
 
 import com.alibaba.csp.sentinel.adapter.gateway.common.SentinelGatewayConstants;
+import com.alibaba.csp.sentinel.adapter.gateway.common.api.ApiDefinition;
+import com.alibaba.csp.sentinel.adapter.gateway.common.api.ApiPathPredicateItem;
+import com.alibaba.csp.sentinel.adapter.gateway.common.api.ApiPredicateItem;
+import com.alibaba.csp.sentinel.adapter.gateway.common.api.GatewayApiDefinitionManager;
 import com.alibaba.csp.sentinel.adapter.gateway.common.rule.GatewayFlowRule;
 import com.alibaba.csp.sentinel.adapter.gateway.common.rule.GatewayRuleManager;
 import com.alibaba.csp.sentinel.adapter.gateway.sc.callback.GatewayCallbackManager;
@@ -21,7 +25,13 @@ public class ConsumerSentinelGatewayApplication {
 
     public static void main(String[] args) {
         SpringApplication.run(ConsumerSentinelGatewayApplication.class, args);
-        initRule();
+        //route路由
+        //initRule();
+        //api路由限流
+        initAPIRule();
+        //API路由
+        initCustomizedApis();
+        //路由限流降级方法
         initBlockHandlers();
     }
 
@@ -56,4 +66,51 @@ public class ConsumerSentinelGatewayApplication {
             return ServerResponse.status(HttpStatus.TOO_MANY_REQUESTS) .contentType(MediaType.APPLICATION_JSON).body(BodyInserters.fromValue(map));
         });
     }
+
+
+
+
+    private static void initAPIRule() {
+        Set<GatewayFlowRule> rules = new HashSet<>();
+        // 在这里指定了对哪些路由api进行限流
+        GatewayFlowRule providerRule = gatewayFlowRule("depart_provider", 1);
+        GatewayFlowRule consumerRule = gatewayFlowRule("depart_consumer", 2);
+        rules.add(providerRule);
+        rules.add(consumerRule);
+        GatewayRuleManager.loadRules(rules);
+    }
+
+    private static void initCustomizedApis() {
+        // 定义一个名称为 depart_provider 的路由api
+        ApiDefinition providerApi = new ApiDefinition("depart_provider").setPredicateItems(
+                new HashSet<ApiPredicateItem>() {{
+                    add(new ApiPathPredicateItem().setPattern("/sentinel/get/**")
+                            // 指定该路由api对于请求的匹配策略为 前辍匹配
+                    .setMatchStrategy(SentinelGatewayConstants.URL_MATCH_STRATEGY_PREFIX)); }});
+        // 定义一个名称为 depart_consumer 的路由api
+        ApiDefinition consumerApi = new ApiDefinition("depart_consumer").setPredicateItems(
+                new HashSet<ApiPredicateItem>() {{
+                    add(new ApiPathPredicateItem().setPattern("/provider/depart/get/2"));
+                    add(new ApiPathPredicateItem().setPattern("/provider/depart/get/3")
+                            // 指定该路由api对于请求的匹配策略为 精确匹配
+                            .setMatchStrategy(SentinelGatewayConstants.URL_MATCH_STRATEGY_EXACT)); }});
+        Set<ApiDefinition> definitions = new HashSet<>();
+        definitions.add(providerApi);
+        definitions.add(consumerApi);
+        GatewayApiDefinitionManager.loadApiDefinitions(definitions);
+    }
+
+    //定义网关限流规则
+    private static GatewayFlowRule gatewayFlowRule(String apiName, int count) {
+        GatewayFlowRule rule = new GatewayFlowRule();
+        // 指定规则模式为路由api限流
+        rule.setResourceMode(SentinelGatewayConstants.RESOURCE_MODE_CUSTOM_API_NAME );
+        rule.setResource(apiName);
+        //api名称
+        rule.setGrade(RuleConstant.FLOW_GRADE_QPS);
+        rule.setCount(count);
+        return rule;
+    }
+
+
 }
